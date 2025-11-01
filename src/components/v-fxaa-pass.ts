@@ -95,4 +95,17 @@ export class VFXAAPass extends HTMLElement {
 				.onAfterRender(() => emit("after-render", fxaaPass));
 		});
 	}
+
+	disconnectedCallback() {
+		if (this.fxaaPass) {
+			this.dispatchEvent(
+				new CustomEvent("before-remove", {
+					detail: {
+						fxaaPass: this.fxaaPass,
+					},
+				})
+			);
+			this.fxaaPass.remove();
+		}
+	}
 }

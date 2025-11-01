@@ -266,91 +266,91 @@ export function VBaseQueueMixin(constructor: Function) {
 	};
 }
 
-// ------------------------
-// 示例：测试自动入队行为
-// ------------------------
-@VBaseQueueMixin
-class DemoElem extends HTMLElement {
-	mountQueue!: MaybePromiseFn[];
-	unmountQueue!: MaybePromiseFn[];
+// // ------------------------
+// // 示例：测试自动入队行为
+// // ------------------------
+// @VBaseQueueMixin
+// class DemoElem extends HTMLElement {
+// 	mountQueue!: MaybePromiseFn[];
+// 	unmountQueue!: MaybePromiseFn[];
 
-	constructor() {
-		super();
-		this.attachShadow({ mode: "open" });
-		this.shadowRoot!.innerHTML = `<div>DemoElem</div>`;
-	}
+// 	constructor() {
+// 		super();
+// 		this.attachShadow({ mode: "open" });
+// 		this.shadowRoot!.innerHTML = `<div>DemoElem</div>`;
+// 	}
 
-	connectedCallback() {
-		console.log("DemoElem: original connectedCallback called");
-	}
+// 	connectedCallback() {
+// 		console.log("DemoElem: original connectedCallback called");
+// 	}
 
-	disconnectedCallback() {
-		console.log("DemoElem: original disconnectedCallback called");
-	}
+// 	disconnectedCallback() {
+// 		console.log("DemoElem: original disconnectedCallback called");
+// 	}
 
-	@IsVBaseQueue(SetupKey)
-	async setup() {
-		console.log("[setup] start", Date.now());
-		// 在 setup 内添加 mount 与 unmount 任务，验证会被包含
-		this.addPostSetupMount();
-		this.addPostSetupUnmount();
-		await new Promise((r) => setTimeout(r, 300));
-		console.log("[setup] done", Date.now());
-	}
+// 	@IsVBaseQueue(SetupKey)
+// 	async setup() {
+// 		console.log("[setup] start", Date.now());
+// 		// 在 setup 内添加 mount 与 unmount 任务，验证会被包含
+// 		this.addPostSetupMount();
+// 		this.addPostSetupUnmount();
+// 		await new Promise((r) => setTimeout(r, 300));
+// 		console.log("[setup] done", Date.now());
+// 	}
 
-	@IsVBaseQueue(MonutKey)
-	async loadHeavyResource() {
-		console.log("[loadHeavyResource] start", Date.now());
-		await new Promise((r) => setTimeout(r, 1000 + Math.random() * 2000));
-		console.log("[loadHeavyResource] done", Date.now());
-	}
+// 	@IsVBaseQueue(MonutKey)
+// 	async loadHeavyResource() {
+// 		console.log("[loadHeavyResource] start", Date.now());
+// 		await new Promise((r) => setTimeout(r, 1000 + Math.random() * 2000));
+// 		console.log("[loadHeavyResource] done", Date.now());
+// 	}
 
-	@IsVBaseQueue(MonutKey)
-	async loadAnother() {
-		console.log("[loadAnother] start", Date.now());
-		await new Promise((r) => setTimeout(r, 500 + Math.random() * 1500));
-		console.log("[loadAnother] done", Date.now());
-	}
+// 	@IsVBaseQueue(MonutKey)
+// 	async loadAnother() {
+// 		console.log("[loadAnother] start", Date.now());
+// 		await new Promise((r) => setTimeout(r, 500 + Math.random() * 1500));
+// 		console.log("[loadAnother] done", Date.now());
+// 	}
 
-	@IsVBaseQueue(UnmountKey)
-	cleanup() {
-		console.log("[cleanup] called");
-	}
+// 	@IsVBaseQueue(UnmountKey)
+// 	cleanup() {
+// 		console.log("[cleanup] called");
+// 	}
 
-	addPostSetupMount() {
-		console.log("[setup] push a post-setup mount task");
-		(this.mountQueue = this.mountQueue || []).push(() => {
-			console.log("[post-setup mount] running");
-			return new Promise((r) => setTimeout(r, 200));
-		});
-	}
+// 	addPostSetupMount() {
+// 		console.log("[setup] push a post-setup mount task");
+// 		(this.mountQueue = this.mountQueue || []).push(() => {
+// 			console.log("[post-setup mount] running");
+// 			return new Promise((r) => setTimeout(r, 200));
+// 		});
+// 	}
 
-	addPostSetupUnmount() {
-		console.log("[setup] push a post-setup unmount task");
-		(this.unmountQueue = this.unmountQueue || []).push(() => {
-			console.log("[post-setup unmount] running");
-		});
-	}
-}
-customElements.define("demo-elem", DemoElem);
+// 	addPostSetupUnmount() {
+// 		console.log("[setup] push a post-setup unmount task");
+// 		(this.unmountQueue = this.unmountQueue || []).push(() => {
+// 			console.log("[post-setup unmount] running");
+// 		});
+// 	}
+// }
+// customElements.define("demo-elem", DemoElem);
 
-// demo runner（自动创建组件，不需手动调用任何方法）
-function demoRun() {
-	const container = document.createElement("div");
-	document.body.appendChild(container);
+// // demo runner（自动创建组件，不需手动调用任何方法）
+// function demoRun() {
+// 	const container = document.createElement("div");
+// 	document.body.appendChild(container);
 
-	for (let i = 0; i < 3; i++) {
-		const e = document.createElement("demo-elem") as any;
-		container.appendChild(e);
-		// 不再需要手动调用 e.setup() / e.loadHeavyResource() / e.loadAnother()
-	}
+// 	for (let i = 0; i < 3; i++) {
+// 		const e = document.createElement("demo-elem") as any;
+// 		container.appendChild(e);
+// 		// 不再需要手动调用 e.setup() / e.loadHeavyResource() / e.loadAnother()
+// 	}
 
-	// 5 秒后移除所有元素，触发 unmount 队列
-	setTimeout(() => {
-		container.innerHTML = "";
-	}, 8000);
-}
+// 	// 5 秒后移除所有元素，触发 unmount 队列
+// 	setTimeout(() => {
+// 		container.innerHTML = "";
+// 	}, 8000);
+// }
 
-if (typeof window !== "undefined") {
-	window.addEventListener("load", demoRun);
-}
+// if (typeof window !== "undefined") {
+// 	window.addEventListener("load", demoRun);
+// }
