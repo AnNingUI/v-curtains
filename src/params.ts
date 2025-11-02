@@ -76,6 +76,7 @@ export interface VPingPongPlaneParams {
 		left: number;
 		right: number;
 	};
+	depthTest?: boolean;
 	watchScroll?: boolean;
 	texturesOptions?: object;
 	crossOrigin?: string;
@@ -107,6 +108,7 @@ export const defaultVPingPongPlaneParams: VPingPongPlaneParams = {
 		left: 0,
 		right: 0,
 	},
+	depthTest: true,
 	watchScroll: true,
 	texturesOptions: {},
 	crossOrigin: "",
