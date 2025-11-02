@@ -1,3 +1,5 @@
+import type { Uniform } from "curtainsjs";
+
 export type Signal<T> = {
 	(): T;
 	(value: T): void;
@@ -65,7 +67,7 @@ export interface VPingPongPlaneParams {
 	heightSegments?: number;
 	renderOrder?: number;
 	transparent?: boolean;
-	cullFace?: string;
+	cullFace?: "back" | "front" | "none";
 	alwaysDraw?: boolean;
 	visible?: boolean;
 	drawCheckMargins?: {
@@ -78,7 +80,7 @@ export interface VPingPongPlaneParams {
 	texturesOptions?: object;
 	crossOrigin?: string;
 	fov?: number;
-	uniforms?: object;
+	uniforms: Record<string, Uniform> | undefined;
 	target?: any;
 	relativeTranslation?: any;
 	rotation?: any;

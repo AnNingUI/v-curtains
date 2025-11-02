@@ -266,12 +266,17 @@ export function vDeepReadOnly<T>(obj: T): Readonly<T> {
 		try {
 			Object.freeze(result);
 		} catch (e) {
+			console.warn("vDeepReadOnly: failed to freeze object", e);
 			// 某些环境下 freeze 可能会失败（宿主对象），忽略错误
 		}
 		return result;
 	}
 
 	return inner(obj) as Readonly<T>;
+}
+
+export function vEmit(self: HTMLElement, event: string, detail?: any) {
+	self.dispatchEvent(new CustomEvent(event, { detail: detail }));
 }
 
 export class Options<A> {
