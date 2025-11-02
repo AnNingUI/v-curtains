@@ -10,6 +10,7 @@ import {
 	curtainsEvents,
 	flattenDefaultParams,
 	vDeepReadOnly,
+	vEmit,
 	vProvide,
 	type SubscriptionKey,
 } from "../utils";
@@ -29,6 +30,10 @@ export class VCurtains extends HTMLElement {
 
 	get params() {
 		return this.#params();
+	}
+
+	set params(params: VCurtainsParams) {
+		this.#params?.(params);
 	}
 
 	get gl() {
@@ -120,11 +125,7 @@ export class VCurtains extends HTMLElement {
 				// 派发自定义事件给外部使用（转换为kebab-case命名）
 				const eventName =
 					curtainsEvents.kebabCase[subscription as SubscriptionKey];
-				this.dispatchEvent(
-					new CustomEvent(eventName, {
-						detail: this.curtains,
-					})
-				);
+				vEmit(this, eventName, this.curtains);
 
 				// 执行内部订阅回调
 				curtainsEvents.subscriptions[subscription as SubscriptionKey].forEach(
