@@ -14,6 +14,19 @@ import {
 } from "../params";
 import { flattenDefaultParams, vEmit } from "../utils";
 
+/**
+ * @element v-fxaa-pass
+ * @tag v-fxaa-pass
+ * @prop {VCurtainsParams} params
+ * event "before-create" | "loading" | "error" | "ready" | "after-resize" | "render" | "after-render" | "before-remove"
+ * @fires before-create
+ * @fires loading
+ * @fires error
+ * @fires ready
+ * @fires after-resize
+ * @fires render
+ * @fires before-remove
+ */
 @VBaseQueueMixin
 export class VFXAAPass extends HTMLElement {
 	static {
@@ -69,9 +82,10 @@ export class VFXAAPass extends HTMLElement {
 
 		this.#params = signal<VFXAAPassParams>(initialParams);
 		useCurtains(this as unknown as WebComponentExt, (curtains) => {
+			const emit = vEmit.bind(this, this);
+			emit("before-create");
 			this.fxaaPass = new FXAAPass(curtains, this.params);
 			const fxaaPass = this.fxaaPass;
-			const emit = vEmit.bind(this, this);
 			this.fxaaPass
 				.onError(() => emit("error", fxaaPass))
 				.onLoading((texture) =>

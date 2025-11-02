@@ -16,7 +16,16 @@ import {
 } from "../utils";
 /**
  * @element v-curtains
- * @property {VCurtainsParams} params
+ * @tag v-curtains
+ * @prop {VCurtainsParams} params
+ * event "after-resize" | "context-lost" | "context-restored" | "error" | "success" | "render" | "scroll"
+ * @fires after-resize
+ * @fires context-lost
+ * @fires context-restored
+ * @fires error
+ * @fires success
+ * @fires render
+ * @fires scroll
  */
 export class VCurtains extends HTMLElement {
 	static {

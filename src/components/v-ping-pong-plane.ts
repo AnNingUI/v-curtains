@@ -13,7 +13,18 @@ import {
 	type VPingPongPlaneParams,
 } from "../params";
 import { flattenDefaultParams, vEmit } from "../utils";
-
+/**
+ * @element v-ping-pong-plane
+ * @tag v-ping-pong-plane
+ * event "before-create" | "loading" | "error" | "ready" | "after-resize" | "render" | "after-render" | "before-remove"
+ * @fires before-create
+ * @fires loading
+ * @fires error
+ * @fires ready
+ * @fires after-resize
+ * @fires render
+ * @fires before-remove
+ */
 @VBaseQueueMixin
 export class VPinePongPlane extends HTMLElement {
 	#params!: Signal<VPingPongPlaneParams>;
@@ -27,6 +38,10 @@ export class VPinePongPlane extends HTMLElement {
 
 	get params() {
 		return this.#params();
+	}
+
+	set params(val: VPingPongPlaneParams) {
+		this.#params?.(val);
 	}
 
 	attributeChangedCallback(attrName: string, oldVal: any, newVal: any) {
@@ -126,7 +141,7 @@ export class VPinePongPlane extends HTMLElement {
 	disconnectedCallback() {
 		this.#effect();
 		if (this.plane) {
-			vEmit(this, "before-destroy", this.plane);
+			vEmit(this, "before-remove", this.plane);
 			this.plane.remove();
 		}
 	}
